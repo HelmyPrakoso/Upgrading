@@ -1,0 +1,24 @@
+#setup library
+library(naivebayes) #library untuk naive bayes
+library(caret) #library untuk output analysis
+library(dplyr) #library untuk subseting dataset
+#importdataset
+FlightDelays<-read.csv("https://raw.githubusercontent.com/HelmyPrakoso/Datamining/main/FlightDelays.csv")
+#subseting dataset
+x<-FlightDelays %>% select(10,1,8,4,2)
+y<-FlightDelays[,13]
+#splitting datasets
+index<-sample(1:nrow(x),size=0.3*nrow(x))
+#test data (30%)
+xtest<-x[index,]
+ytest<-y[index]
+#train data (70%)
+xtrain<-x[-index,]
+ytrain<-y[-index]
+hasil=naive_bayes(xtrain,ytrain,laplace = TRUE)
+hasil
+prediksi=predict(hasil,xtest)
+prediksi
+cm=table(prediksi,ytest)
+cm
+confusionMatrix(cm)
